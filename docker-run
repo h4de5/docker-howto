@@ -1,1 +1,0 @@
-docker run -it --hostname=bash-container --user $(id -u):$(id -g) -v ./app:/app bash
