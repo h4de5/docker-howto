@@ -1,9 +1,30 @@
 # aktuelle version a
-version: "3.7"
+version: "2.3"
+
+# how to:
+# zuerst wird mal alles gebuildet:
+#   docker-compose build
+# da nur ein service einen build-bereich hat (create) wird auch nur dieser gebuildet
+# die anderen werden hier nicht verwendet
+# danach kann mit:
+#   docker-compose up create
+# der docker-container vorbereitet werden.
+# hier wird nur mit touch eine datei angelegt  und danch wieder beendet
+# mit:
+#   docker-compose up -d watch
+# wird dann ein container gestartet der auch wirklich im weiterläuft
+# um zu sehen, was der container so macht (gibt einfach ein teil auf das watchfile aus)
+# startet man die logs:
+#   docker logs -f docker-howto-watch
+# um sich auf den container zu verbinden kann man:
+#   docker-compose run connect
+# ausführen. hierbei wird dann eine bash auf dem container gemacht
 
 # services definieren
 services:
-  # starten mit: docker-compose up create
+  # hier wird das
+  # starten mit:
+  #   docker-compose up create
   # service name
   create:
     # image name
@@ -37,7 +58,8 @@ services:
     #   retries: 3
 
   # service um auf die console des containers zu verbinden
-  # starten mit: docker-compose run connect
+  # starten mit:
+  #   docker-compose run connect
   connect:
     # verwendet image name von oben
     image: docker-howto-image
@@ -58,7 +80,8 @@ services:
 
   # service das im hintergrund offen bleibt
   # auslesen der logs mit: docker logs -f docker-howto-watch
-  # starten mit: docker-compose up -d watch
+  # starten mit:
+  #   docker-compose up -d watch
   watch:
     image: docker-howto-image
     container_name: docker-howto-watch
