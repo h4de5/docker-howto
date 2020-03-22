@@ -1,0 +1,77 @@
+# aktuelle version a
+version: "3.7"
+
+# services definieren
+services:
+  # starten mit: docker-compose up create
+  # service name
+  create:
+    # image name
+    image: docker-howto-image
+    # image: benutzer/docker-howto-image:latest
+    # container name
+    container_name: docker-howto-create
+    # weitere möglichkeit die benutzerid des container users zu setzen
+    # user: $USER_ID:$GROUP_ID
+    build:
+      # verzeichnis und datei zum Dockerfile angeben
+      context: .
+      dockerfile: Dockerfile
+      # build parameter
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    # -v parameter
+    volumes:
+      # - /absoluter_pfad:/irgendwas
+      - ./host-folder:/app
+      - ~/.bashrc:/root/.bashrc
+      - named_volume:/irgendwasanderes
+    env_file: .env
+    restart: unless-stopped
+    # healthcheck:
+    #   # test: curl --fail -s http://localhost:5000/ || exit 1
+    #   test: ls newfile.txt || exit 1
+    #   interval: 1m30s
+    #   timeout: 2s
+    #   retries: 3
+
+  # service um auf die console des containers zu verbinden
+  # starten mit: docker-compose run connect
+  connect:
+    # verwendet image name von oben
+    image: docker-howto-image
+    container_name: docker-howto-connect
+    # muss nur angegeben werden, wenn USER im dockerfile nicht angegeben wird
+    user: $USER_ID:$GROUP_ID
+    # linkt selbers verzeichnis rein
+    volumes:
+      - ./host-folder:/app
+      # einzelne datei in den container linken
+      - ~/.bashrc:/home/container-user/.bashrc
+    env_file: .env
+    restart: unless-stopped
+    # damit ma die bash aufrufen kann
+    stdin_open: true
+    tty: true
+    entrypoint: bash
+
+  # service das im hintergrund offen bleibt
+  # auslesen der logs mit: docker logs -f docker-howto-watch
+  # starten mit: docker-compose up -d watch
+  watch:
+    image: docker-howto-image
+    container_name: docker-howto-watch
+    user: $USER_ID:$GROUP_ID
+    volumes:
+      - ./host-folder:/app
+      - ~/.bashrc:/root/.bashrc
+    env_file: .env
+    restart: unless-stopped
+    entrypoint:
+      - tail
+      - -f
+      - /app/watchfile.txt
+
+volumes:
+  named_volume: {}
