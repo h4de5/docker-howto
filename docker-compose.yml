@@ -79,9 +79,10 @@ services:
     entrypoint: bash
 
   # service das im hintergrund offen bleibt
-  # auslesen der logs mit: docker logs -f docker-howto-watch
   # starten mit:
   #   docker-compose up -d watch
+  # auslesen der logs mit:
+  #   docker logs -f docker-howto-watch
   watch:
     image: docker-howto-image
     container_name: docker-howto-watch
